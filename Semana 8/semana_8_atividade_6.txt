@@ -1,0 +1,30 @@
+SET SERVEROUTPUT ON
+DECLARE
+    v_divisoes NUMBER := 0;
+    v_resto NUMBER;
+
+    PROCEDURE NUMERO_PRIMO(p_numero NUMBER) IS
+    BEGIN
+        FOR cont IN 1 .. p_numero LOOP
+        
+        v_resto := MOD(p_numero, cont);
+        
+        IF v_resto = 0 THEN
+            v_divisoes := v_divisoes+1;
+        END IF;
+        
+        END LOOP;
+        
+        IF v_divisoes = 2 THEN
+            DBMS_OUTPUT.PUT_LINE('NUMERO PRIMO! Qntd. divisoes: ' || v_divisoes);
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('NUMERO NAO PRIMO! Qntd. divisoes: ' || v_divisoes);
+        END IF;
+            
+    END NUMERO_PRIMO;
+    
+BEGIN
+
+    NUMERO_PRIMO(7);
+
+END;

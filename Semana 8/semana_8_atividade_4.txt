@@ -1,0 +1,60 @@
+/* 
+    SELECT * FROM PRODUTO
+    
+    INSERT INTO PRODUTO(CODIGO, CATEGORIA, VALOR) VALUES(1004, 'B', 120);
+    
+    CREATE TABLE ALIQUOTA(
+        COD_CAT VARCHAR(10),
+        IPI NUMBER(10,2)
+    );
+    
+    SELECT * FROM ALIQUOTA
+    
+    INSERT INTO ALIQUOTA(COD_CAT, IPI) VALUES('A', 10);
+    INSERT INTO ALIQUOTA(COD_CAT, IPI) VALUES('B', 15);
+    COMMIT;
+    
+    DESCRIBE ALIQUOTA
+*/
+SET SERVEROUTPUT ON
+DECLARE
+
+    rec_produto PRODUTO%ROWTYPE;
+    v_ipi NUMBER(10,2);
+    v_valor_aliquota NUMBER(10,2);
+
+    PROCEDURE CONSULTAR_ALIQUOTA (p_codigo NUMBER) IS
+    BEGIN
+        
+        --Seleciona os dados do produto referente ao codigo passado
+        SELECT CATEGORIA, VALOR INTO rec_produto.categoria, rec_produto.valor FROM PRODUTO WHERE CODIGO = p_codigo;
+        
+        BEGIN
+            SELECT IPI INTO v_ipi FROM ALIQUOTA WHERE COD_CAT = rec_produto.categoria;
+            
+            EXCEPTION
+                WHEN NO_DATA_FOUND THEN
+                    v_ipi := 0;
+                
+        END;
+        
+        v_valor_aliquota := rec_produto.valor * (v_ipi/100);
+        
+        DBMS_OUTPUT.PUT_LINE('   CODIGO: ' || p_codigo);
+        DBMS_OUTPUT.PUT_LINE('CATEGORIA: ' || rec_produto.categoria);
+        DBMS_OUTPUT.PUT_LINE('    VALOR: ' || rec_produto.valor);
+        DBMS_OUTPUT.PUT_LINE('VALOR IPI: ' || v_valor_aliquota);
+        DBMS_OUTPUT.PUT_LINE('----------------------------------');
+        DBMS_OUTPUT.PUT_LINE('');        
+        
+    END CONSULTAR_ALIQUOTA;
+    
+BEGIN
+
+    FOR cursor_produto IN (SELECT CODIGO FROM PRODUTO) LOOP
+    
+        CONSULTAR_ALIQUOTA(cursor_produto.CODIGO);
+    
+    END LOOP;
+
+END;

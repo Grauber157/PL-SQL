@@ -1,0 +1,43 @@
+/* 
+    CREATE TABLE ALUNO_NOTA(
+        RA NUMBER, 
+        NOME VARCHAR(50), 
+        A1 NUMBER(10,2),
+        A2 NUMBER(10,2),
+        A3 NUMBER(10,2),
+        A4 NUMBER(10,2),
+        MEDIA NUMBER(10,2),
+        RESULTADO VARCHAR(10));
+        
+    SELECT * FROM ALUNO_NOTA
+*/
+SET SERVEROUTPUT ON
+DECLARE 
+
+    v_media ALUNO_NOTA.MEDIA%TYPE;
+    v_resultado ALUNO_NOTA.RESULTADO%TYPE;
+
+    PROCEDURE CALCULAR_NOTA(p_RA NUMBER, p_nome VARCHAR, p_A1 NUMBER, p_A2 NUMBER, p_A3 NUMBER, p_A4 NUMBER) IS
+    BEGIN
+    
+        v_media := ((p_A1 + p_A2 + p_A3 + p_A4)/4);
+        
+        IF v_media >= 6 THEN
+            v_resultado := 'APROVADO';
+        ELSE 
+            v_resultado := 'REPROVADO';
+        END IF;
+    
+        INSERT INTO ALUNO_NOTA(RA, NOME, A1, A2, A3, A4, MEDIA, RESULTADO)
+            VALUES(p_RA, p_nome, p_A1, p_A2, p_A3 , p_A4, v_media, v_resultado);
+            
+            COMMIT;
+    END CALCULAR_NOTA;
+    
+BEGIN
+
+    CALCULAR_NOTA(100, 'JORGE', 8, 2, 9, 1);
+    CALCULAR_NOTA(101, 'MARIA JORGE', 2, 2, 5, 1);
+    CALCULAR_NOTA(102, 'JORGE MARIA JORGE', 9, 7, 9, 5);
+
+END;

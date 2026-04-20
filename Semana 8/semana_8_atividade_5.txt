@@ -1,0 +1,57 @@
+/* 
+    CREATE TABLE LUCRO(
+        ANO NUMBER(4),
+        VALOR NUMBER(20)
+    );
+    
+    CREATE TABLE SALARIO(
+        MATRICULA NUMBER(4),
+        VALOR NUMBER(12)
+    );
+    
+    SELECT * FROM LUCRO;
+    SELECT * FROM SALARIO;
+    
+    INSERT INTO LUCRO(ANO, VALOR) VALUES(2007, 1200000);
+    INSERT INTO LUCRO(ANO, VALOR) VALUES(2008, 1500000);
+    INSERT INTO LUCRO(ANO, VALOR) VALUES(2009, 1400000);
+        
+    INSERT INTO SALARIO(MATRICULA, VALOR) VALUES (1001, 2500);
+    INSERT INTO SALARIO(MATRICULA, VALOR) VALUES(1002, 3200);
+    COMMIT;
+    
+*/
+SET SERVEROUTPUT ON
+DECLARE
+
+    v_lucro NUMBER;
+    v_salario NUMBER;
+    v_bonus NUMBER;
+
+    PROCEDURE BONUS(p_ano NUMBER, p_matricula NUMBER) IS
+    BEGIN
+        
+        --Lucro respectivo daquele ano
+        SELECT VALOR INTO v_lucro FROM LUCRO WHERE ANO = p_ano;
+        --Salario do respectivo funcionario
+        SELECT VALOR INTO v_salario FROM SALARIO WHERE MATRICULA = p_matricula;
+        
+        v_bonus := (v_lucro*0.01)+(v_salario*0.05);
+        
+        DBMS_OUTPUT.PUT_LINE('');
+        DBMS_OUTPUT.PUT_LINE('     MATRICULA: ' || p_matricula);
+        DBMS_OUTPUT.PUT_LINE('           ANO: ' || p_ano);
+        DBMS_OUTPUT.PUT_LINE('BONUS SALARIAL: ' || v_bonus);
+        DBMS_OUTPUT.PUT_LINE('-----------------------------');
+        
+    END BONUS;
+    
+BEGIN
+
+    FOR cursor_ano IN (SELECT ANO FROM LUCRO) LOOP
+        FOR cursor_matricula IN (SELECT MATRICULA FROM SALARIO) LOOP 
+            BONUS(cursor_ano.ANO, cursor_matricula.MATRICULA);
+        END LOOP;
+    END LOOP;
+    
+END;

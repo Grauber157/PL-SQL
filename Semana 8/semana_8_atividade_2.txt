@@ -1,0 +1,35 @@
+/* 
+    CREATE TABLE CLIENTE (
+        COD_CLI NUMBER,
+        NOME_CLI VARCHAR2(50), 
+        EMAIL_CLI VARCHAR2(100)
+    )
+    
+    SELECT * FROM CLIENTE
+
+*/
+SET SERVEROUTPUT ON
+DECLARE
+    
+    rec_cliente CLIENTE%ROWTYPE;
+    v_nome CLIENTE.NOME_CLI%TYPE;
+    v_email CLIENTE.EMAIL_CLI%TYPE;
+
+    PROCEDURE BUSCAR_CLIENTE (p_codigo IN NUMBER) IS
+    BEGIN
+        SELECT NOME_CLI, EMAIL_CLI INTO v_nome, v_email FROM CLIENTE WHERE COD_CLI = p_codigo;
+        DBMS_OUTPUT.PUT_LINE(' NOME: ' || v_nome);
+        DBMS_OUTPUT.PUT_LINE('EMAIL: ' || v_email);
+        DBMS_OUTPUT.PUT_LINE('-----------------------');
+        DBMS_OUTPUT.PUT_LINE('');
+    END BUSCAR_CLIENTE;
+    
+BEGIN
+
+    FOR rec_cliente IN (SELECT COD_CLI FROM CLIENTE) LOOP
+        
+        BUSCAR_CLIENTE(rec_cliente.COD_CLI);
+    
+    END LOOP;
+
+END;

@@ -1,0 +1,16 @@
+SET SERVEROUTPUT ON
+DECLARE
+    
+    v_celsius NUMBER;
+
+    PROCEDURE CONVERTER_FAHRENHEIT(p_fahrenheit NUMBER) IS
+    BEGIN
+        v_celsius := (p_fahrenheit-32)/1.8;
+        DBMS_OUTPUT.PUT_LINE('Temperatura em ºC: ' || v_celsius);
+    END;
+    
+BEGIN
+
+    CONVERTER_FAHRENHEIT(65);
+
+END;
