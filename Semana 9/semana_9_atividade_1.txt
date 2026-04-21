@@ -1,0 +1,15 @@
+CREATE OR REPLACE PROCEDURE SP_IMC(p_peso IN NUMBER, p_altura IN NUMBER) IS
+    v_imc NUMBER;
+    BEGIN
+        v_imc := p_peso/(p_altura*p_altura);
+
+        IF v_imc <= 19 THEN
+            DBMS_OUTPUT.PUT_LINE('SUBPESO, IMC: ' || v_imc);
+        ELSIF v_imc <= 25 THEN
+            DBMS_OUTPUT.PUT_LINE('PESO NORMAL, IMC: ' || v_imc);
+        ELSIF v_imc <= 29.9 THEN
+            DBMS_OUTPUT.PUT_LINE('SOBREPESO, IMC: ' || v_imc);
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('OBESIDADE, IMC: ' || v_imc);
+        END IF;
+    END;

@@ -1,0 +1,17 @@
+CREATE OR REPLACE PROCEDURE CONSULTAR_DISCIPLINAS(p_id IN NUMBER) IS
+BEGIN
+
+    FOR matricula IN (SELECT ID_DISCIPLINA FROM MATRICULA WHERE ID_ALUNO = p_id) LOOP
+
+        FOR disciplina IN (SELECT NOME_DISCIPLINA, ID_PROFESSOR FROM DISCIPLINA WHERE ID_DISCIPLINA = matricula.ID_DISCIPLINA) LOOP
+        
+            FOR professor IN (SELECT NOME_PROFESSOR FROM PROFESSOR WHERE ID_PROFESSOR = disciplina.ID_PROFESSOR) LOOP
+                DBMS_OUTPUT.PUT_LINE('');
+                DBMS_OUTPUT.PUT_LINE('       ID ALUNO: ' || p_id);
+                DBMS_OUTPUT.PUT_LINE('NOME DISCIPLINA: ' || disciplina.NOME_DISCIPLINA);
+                DBMS_OUTPUT.PUT_LINE(' NOME PROFESSOR: ' || professor.NOME_PROFESSOR);
+                DBMS_OUTPUT.PUT_LINE('--------------------------------------------------');
+            END LOOP;
+        END LOOP;
+    END LOOP;
+END;

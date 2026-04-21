@@ -1,0 +1,15 @@
+CREATE OR REPLACE FUNCTION CONSULTAR_DISCIPLINA(p_id IN NUMBER) RETURN CLOB IS
+    v_resultado CLOB;
+    v_id_professor NUMBER;
+    v_nome_professor VARCHAR(50);
+BEGIN
+        
+    SELECT ID_PROFESSOR INTO v_id_professor FROM DISCIPLINA WHERE ID_DISCIPLINA = p_id;
+    
+    SELECT NOME_PROFESSOR INTO v_nome_professor FROM PROFESSOR WHERE ID_PROFESSOR = v_id_professor;
+    
+    v_resultado := v_resultado || ' ID: ' || v_id_professor || ' | Nome: ' || v_nome_professor || ' /';
+    
+    RETURN v_resultado;
+
+END;

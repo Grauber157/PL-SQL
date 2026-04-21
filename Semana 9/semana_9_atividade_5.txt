@@ -1,0 +1,18 @@
+CREATE OR REPLACE FUNCTION CHECAGEM_PRIMO(p_numero IN NUMBER) RETURN NUMBER IS
+    v_divisoes NUMBER := 0;
+    v_return NUMBER;
+BEGIN
+    FOR cont IN 1 .. p_numero LOOP
+        IF MOD(p_numero, cont) = 0 THEN
+            v_divisoes := v_divisoes + 1;
+        END IF;
+    END LOOP;
+    
+    IF v_divisoes = 2 THEN
+        v_return := 1;
+    ELSE
+        v_return := 0;
+    END IF;
+    
+    RETURN v_return;
+END;

@@ -1,0 +1,13 @@
+create or replace PROCEDURE SP_ANOS_BISSEXTO IS
+BEGIN
+
+    FOR cont IN 2000 .. 2100 LOOP
+
+        IF MOD(cont, 4) = 0 THEN
+            IF MOD(cont, 100) != 0 THEN
+                DBMS_OUTPUT.PUT_LINE(cont);
+            END IF;
+        END IF;
+
+    END LOOP;
+END;
