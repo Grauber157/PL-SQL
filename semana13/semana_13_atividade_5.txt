@@ -1,0 +1,35 @@
+/*
+    
+    SELECT * FROM ALUNO_AVALIACAO;
+    SELECT * FROM AVALIACAO;
+    SELECT * FROM MATRICULA;
+
+    SELECT COUNT(*), SUM(AA.nota) FROM ALUNO_AVALIACAO AA
+        INNER JOIN AVALIACAO A ON A.id_avaliacao = AA.id_avaliacao
+        WHERE AA.id_aluno = 1 AND A.id_disciplina = 1;
+
+    UPDATE ALUNO_AVALIACAO SET nota = 8 WHERE id_aluno = 1 AND id_avaliacao = 3;
+    COMMIT;
+*/
+
+ALTER TABLE MATRICULA ADD MEDIA NUMBER(5,2); 
+
+CREATE OR REPLACE TRIGGER trg_calcula_media
+INSTEAD OF INSERT OR UPDATE OR DELETE ON ALUNO_AVALIACAO
+FOR EACH ROW
+DECLARE
+    v_cont NUMBER;
+    v_soma NUMBER;
+    v_id_disciplina NUMBER;
+    v_media NUMBER(5,2);
+BEGIN
+    SELECT id_disciplina INTO v_id_disciplina FROM AVALIACAO WHERE id_avaliacao = :NEW.id_avaliacao;
+
+    SELECT COUNT(*), SUM(nota) INTO v_cont, v_soma FROM ALUNO_AVALIACAO AA
+        INNER JOIN AVALIACAO A ON A.id_avaliacao = AA.id_avaliacao
+        WHERE AA.id_aluno = :NEW.id_aluno AND A.id_disciplina = v_id_disciplina;
+        
+    v_media := v_soma/v_cont;
+    
+    UPDATE MATRICULA SET MEDIA = v_media WHERE id_aluno = :NEW.id_aluno AND id_disciplina = v_id_disciplina;
+END;

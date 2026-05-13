@@ -1,0 +1,27 @@
+CREATE OR REPLACE TRIGGER trg_checagem_presente
+BEFORE INSERT ON LISTA_PRESENTE
+FOR EACH ROW
+DECLARE
+    v_quant NUMBER;
+    v_valor_total NUMBER;
+    v_valor_novo NUMBER;
+BEGIN
+
+    SELECT COUNT(*), SUM(P.P_VALOR) INTO v_quant, v_valor_total FROM LISTA_PRESENTE LP 
+    INNER JOIN PRESENTE P ON LP.p_id = P.p_id
+    WHERE LP.a_id = :NEW.a_id;
+
+    SELECT p_valor INTO v_valor_novo FROM PRESENTE WHERE p_id = :NEW.p_id;
+
+    v_quant := v_quant + 1;
+    v_valor_total := v_valor_total + v_valor_novo;
+
+    IF v_quant > 10 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'LIMITE DE PRESENTES EXCEDIDO qtd: ' || v_quant);
+    END IF;
+
+    IF v_valor_total > 500 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'LIMITE DE PRECO EXCEDIDO R$ ' || v_valor_total);
+    END IF;
+
+END;

@@ -1,0 +1,19 @@
+CREATE OR REPLACE TRIGGER trg_checagem_amigo_secreto
+BEFORE INSERT ON AMIGO_SECRETO
+FOR EACH ROW
+DECLARE
+    v_id_amigo NUMBER;
+    v_id_presente NUMBER;
+    v_cont NUMBER;
+BEGIN
+
+    v_id_amigo := :NEW.a_id;
+    v_id_presente := :NEW.p_id_recebido;    
+
+    SELECT COUNT(*) INTO v_cont FROM LISTA_PRESENTE WHERE a_id = v_id_amigo AND p_id = v_id_presente;
+
+    IF v_cont = 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'PRESENTE NAO CADASTRADO PELO AMIGO');
+    END IF;
+    
+END;
